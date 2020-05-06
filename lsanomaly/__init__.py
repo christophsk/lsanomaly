@@ -1,7 +1,10 @@
+# flake8: noqa
+# pylint: skip-file
+
 import logging
 
 from lsanomaly import _lsanomaly
-from lsanomaly._lsanomaly import LSAnomaly  # noqa
+from lsanomaly._lsanomaly import LSAnomaly
 from lsanomaly import lengthscale_approx as lengthscale_approx
 
 logger = logging.getLogger(__name__)

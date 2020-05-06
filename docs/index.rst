@@ -6,10 +6,10 @@
 .. image:: logo.png
   :width: 250
 
-|PyPI| |Language| |License| |Documentation|
+|Language| |License| |Documentation|
 
-`lsanomaly` is a flexible, fast, probabilistic method for calculating outlier scores on test data, given
-training examples of inliers. Out of the box it works well with `scikit-learn` packages. See the features section
+``lsanomaly`` is a flexible, fast, probabilistic method for calculating outlier scores on test data, given
+training examples of inliers. Out of the box it works well with ``scikit-learn`` packages. See the features section
 for why you might chose this model over other options.
 
 Table of Contents
@@ -34,19 +34,13 @@ Features
 Installation
 ------------
 
-The best way to install lsanomaly is to:
-
-::
-
-    pip install lsanomaly
-
-An alternative is to download the source code and
+Clone or download the source code and
 
 ::
 
    python setup.py install
 
-Tests can be run from `setup` if `pytest` is installed:
+Tests can be run from ``setup`` if ``pytest`` is installed:
 
 ::
 
@@ -55,12 +49,12 @@ Tests can be run from `setup` if `pytest` is installed:
 Usage
 -----
 
-For those familiar with scikit-learn the interface will be familiar, in fact `lsanomaly` was built to be compatible
-with `sklearn` modules where applicable. Here is basic usage of `lsanomaly` to get started quick as possible.
+For those familiar with scikit-learn the interface will be familiar, in fact ``lsanomaly`` was built to be compatible
+with ``sklearn`` modules where applicable. Here is basic usage of ``lsanomaly`` to get started quick as possible.
 
 **Configuring the Model**
 
-LSAD provides reasonable default parameters when given an empty init or it can be passed values for `rho` and `sigma`. The value rho controls sensitivity to outliers and sigma determines the ‘smoothness’ of the
+LSAD provides reasonable default parameters when given an empty init or it can be passed values for ``rho`` and ``sigma``. The value rho controls sensitivity to outliers and sigma determines the ‘smoothness’ of the
 boundary. These values can be tuned to improve your results using lsanomaly.
 
 .. code:: python
@@ -99,7 +93,7 @@ Full documentation can be built using Sphinx.
 
 Examples
 --------
-See `notebooks/` for sample applications.
+See ``notebooks/`` for sample applications.
 
 Reference
 ---------
@@ -123,6 +117,9 @@ J.A. Quinn, M. Sugiyama. A least-squares approach to anomaly detection in static
 .. |Language| image:: https://img.shields.io/badge/language-python-blue.svg?maxAge=259200
 .. |Documentation| image:: https://img.shields.io/badge/docs-100%25-brightgreen.svg?maxAge=259200
 .. |License| image:: https://img.shields.io/badge/license-MIT-7f7f7f.svg?maxAge=259200
+
+.. role:: raw-html(raw)
+    :format: html
 
 Least Squares Anomaly Detection API
 -----------------------------------
@@ -151,15 +148,15 @@ Kernel Length Scale Approximation
 
 Evaluating LSAnomaly
 --------------------
-Scripts for evaluating `lsanomaly` against other methods is provided in J Quinn's software
+Scripts for evaluating ``lsanomaly`` against other methods is provided in J Quinn's software
 https://cit.mak.ac.ug/staff/jquinn/software/lsanomaly.html.
 Owing to changes in APIs and availability of some test data, that code has been refactored and expanded.
 
 There are three commandline applications that will be download the test data, perform a 5-fold
 cross-validation and, produce a LaTeX document summarizing the results. Each of the three applications has
-a `main` method that can be used for further automation.
+a ``main`` method that can be used for further automation.
 
-The following datasets are configured for download (see `evaluate/eval_params.yml`) from
+The following datasets are configured for download (see ``evaluate/eval_params.yml``) from
 https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/.
 
 - australian
@@ -202,7 +199,7 @@ License
 -------
 The MIT License (MIT)
 
-Copyright (c) 2016-2020 John Quinn, David Westerhoff, Chris Skiscim
+Copyright :raw-html:`&copy;` 2016-2020 John Quinn, David Westerhoff, Chris Skiscim
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

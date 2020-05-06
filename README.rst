@@ -3,13 +3,13 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. image:: https://github.com/christophsk/lsanomaly/blob/master/docs/logo.png
+.. image:: docs/logo.png
   :width: 250
 
-|PyPI| |Language| |License| |Documentation|
+|Language| |License| |Documentation|
 
-`lsanomaly` is a flexible, fast, probabilistic method for calculating outlier scores on test data, given
-training examples of inliers. Out of the box it works well with `scikit-learn` packages. See the features section
+``lsanomaly`` is a flexible, fast, probabilistic method for calculating outlier scores on test data, given
+training examples of inliers. Out of the box it works well with ``scikit-learn`` packages. See the features section
 for why you might chose this model over other options.
 
 Table of Contents
@@ -34,19 +34,13 @@ Features
 Installation
 ------------
 
-The best way to install lsanomaly is to:
-
-::
-
-    pip install lsanomaly
-
-An alternative is to download the source code and
+Clone or download the source code and run
 
 ::
 
    python setup.py install
 
-Tests can be run from `setup` if `pytest` is installed:
+Tests can be run from ``setup`` if ``pytest`` is installed:
 
 ::
 
@@ -61,13 +55,13 @@ or the usual
 Usage
 -----
 
-For those familiar with scikit-learn the interface will be familiar, in fact `lsanomaly` was built to be compatible
-with `sklearn` modules where applicable. Here is basic usage of `lsanomaly` to get started quick as possible.
+For those familiar with scikit-learn the interface will be familiar, in fact ``lsanomaly`` was built to be compatible
+with ``sklearn`` modules where applicable. Here is basic usage of ``lsanomaly`` to get started quick as possible.
 
 **Configuring the Model**
 
-LSAD provides reasonable default parameters when given an empty init or it can be passed values for `rho` and `sigma`. The value rho controls sensitivity to outliers and sigma determines the ‘smoothness’ of the
-boundary. These values can be tuned to improve your results using `lsanomaly`.
+``lsanomaly`` provides reasonable default parameters when given an empty init or it can be passed values for ``rho`` and ``sigma``. The value rho controls sensitivity to outliers and sigma determines the ‘smoothness’ of the
+boundary. These values can be tuned to improve your results using ``lsanomaly``.
 
 .. code:: python
 
@@ -97,7 +91,7 @@ Now that the data is fit, we will probably want to try and predict on some data 
     >>> lsanomaly.predict(np.array([[0]]))
     [0.0]
     >>> lsanomaly.predict_proba(np.array([[0]]))
-    array([[ 0.7231233,  0.2768767]])
+    array([[0.7231233,  0.2768767]])
 
 Documentation
 -------------
@@ -105,7 +99,7 @@ Check out the latest docs here: https://lsanomaly.readthedocs.io/en/latest/
 
 Examples
 --------
-See `notebooks/` for sample applications.
+See ``notebooks/`` for sample applications.
 
 Reference
 ---------
@@ -130,11 +124,14 @@ J.A. Quinn, M. Sugiyama. A least-squares approach to anomaly detection in static
 .. |Documentation| image:: https://img.shields.io/badge/docs-100%25-brightgreen.svg?maxAge=259200
 .. |License| image:: https://img.shields.io/badge/license-MIT-7f7f7f.svg?maxAge=259200
 
+.. role:: raw-html(raw)
+    :format: html
+
 License
 -------
 The MIT License (MIT)
 
-Copyright (c) 2016-2020 John Quinn, David Westerhoff, Chris Skiscim
+Copyright :raw-html:`&copy;` 2016-2020 John Quinn, Chris Skiscim, David Westerhoff
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the

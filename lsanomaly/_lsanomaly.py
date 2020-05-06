@@ -1,11 +1,10 @@
 """
 Least Squares Anomaly Detection
-
 """
 # The MIT License (MIT)
 #
-# Copyright (c) 2016 John Quinn
-# Copyright (c) 2019, 202 David Westerhoff, Chris Skiscim
+# Copyright (c) 2016 - 2020 John Quinn
+# Copyright (c) 2019, 2020 David Westerhoff, Chris Skiscim
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"),
@@ -51,7 +50,7 @@ def _check_sigma(sigma):
     if np.isclose(np.array(sigma), np.array([0.0])):
         raise ValueError(
             "knn distance is too small, got {:0.4f}".format(sigma)
-        )  # noqa
+        )
 
 
 class LSAnomaly(base.BaseEstimator):
@@ -125,12 +124,6 @@ class LSAnomaly(base.BaseEstimator):
         self.classes = None
         self.n_classes = None
 
-        if not (sigma is None or isinstance(sigma, str)):
-            _check_sigma(sigma)
-            self.gamma = sigma ** -2
-        if gamma is not None:
-            self.sigma = gamma ** -0.5
-
         self.supported_inferences = ["smoothing", "filtering"]
 
         if seed is not None:
@@ -174,39 +167,36 @@ class LSAnomaly(base.BaseEstimator):
         logger.debug("number of classes: {}".format(self.n_classes))
 
         # If no kernel parameters specified, try to choose some defaults
-        if not self.sigma:
+        if self.sigma is None:
             self.sigma = median_kneighbour_distance(X, k=k)
             _check_sigma(self.sigma)
             self.gamma = self.sigma ** -2
 
-        if not self.gamma:
+        if self.gamma is None:
             self.gamma = self.sigma ** -2
 
-        if not self.rho:
+        if self.rho is None:
             self.rho = 0.1
 
         logger.debug("sigma : {:>6.4f}".format(self.sigma))
         logger.debug("gamma : {:>6.4f}".format(self.gamma))
         logger.debug("rho   : {:>6.4f}".format(self.rho))
 
-        # choose kernel basis centres - random permutation
+        # choose kernel basis centers - random permutation
         if self.kernel_pos is None:
             B = min(self.n_kernels_max, N)
             kernel_idx = np.random.permutation(N)
             self.kernel_pos = X[kernel_idx[:B]]
-            # print("X at {} selected positions:\n{}".format(B, self.kernel_pos))
         else:
             B = self.kernel_pos.shape[0]
 
         # fit coefficients
-        phi = metrics.pairwise.rbf_kernel(X, self.kernel_pos, self.gamma)
-        # print("phi shape: {}".format(phi.shape))
-        phi_dot_phi = phi.T.dot(phi)
-        # print("dot(phi.T, phi) shape: {}".format(phi_dot_phi.shape))
+        Phi = metrics.pairwise.rbf_kernel(X, self.kernel_pos, self.gamma)
+        phi_dot_phi = Phi.T.dot(Phi)
         inverse_term = np.linalg.inv(phi_dot_phi + self.rho * np.eye(B))
         for c in self.classes:
             m = (y == c).astype(int)
-            phi_dot_m = phi.T.dot(m)
+            phi_dot_m = Phi.T.dot(m)
             self._theta[c] = inverse_term.dot(phi_dot_m)
         logger.debug("that took {:6.4f}s".format(time.time() - start))
         return self
@@ -265,12 +255,12 @@ class LSAnomaly(base.BaseEstimator):
         outlier class for test data.
 
         Args
-            X (numpy.ndarray): Test data, of dimension N times d (rows are
+            X (numpy.ndarray): Test data, of dimension `N` times `d` (rows are
             examples, columns are data dimensions)
 
         Returns
-            numpy.ndarray: An array of dimension N times n_inlier_classes+1,
-            containing the probabilities of each row of X being one of the
+            numpy.ndarray: An array of dimension `N` times `n_inlier_classes+1`,
+            containing the probabilities of each row of `X` being one of the
             inlier classes, or the outlier class (last column).
 
         """
@@ -280,15 +270,13 @@ class LSAnomaly(base.BaseEstimator):
         n = X.shape[0]
         predictions = np.zeros((n, self.n_classes + 1))
         for i in range(n):
-            post = np.zeros(self.n_classes)
-            for c in range(self.n_classes):
-                post[c] = max(
-                    0.0, self._theta_dot_phi_i(c, phi[i, :])
-                )
-                post[c] = min(post[c], 1.0)
+            post = [
+                max(0.0, self._theta_dot_phi_i(c, phi[i, :]))
+                for c in range(self.n_classes)
+            ]
+            post = np.array([min(post[c], 1.0) for c in range(self.n_classes)])
             predictions[i, :-1] = post
             predictions[i, -1] = max(0, 1 - sum(post))
-
         return predictions
 
     def _theta_dot_phi_i(self, class_c, phi_i):
@@ -366,15 +354,13 @@ class LSAnomaly(base.BaseEstimator):
         alpha[0, :] = pi
         for t in range(1, T):
             alpha[t, :] = np.dot(alpha[t - 1, :], A)
-            for s in range(S):
-                alpha[t, s] *= obs_all[t, s]
+            alpha[t, :] = [alpha[t, s] * obs_all[t, s] for s in range(S)]
             alpha[t, :] = alpha[t, :] / sum(alpha[t, :])
 
         if inference == "filtering":
             y_prob = alpha
         else:
             beta = np.zeros((T, S))
-            gamma = np.zeros((T, S))
             beta[T - 1, :] = np.ones(S)
             for t in range(T - 2, -1, -1):
                 for i in range(S):
@@ -384,8 +370,9 @@ class LSAnomaly(base.BaseEstimator):
                         )
                 beta[t, :] = beta[t, :] / sum(beta[t, :])
 
-            for t in range(T):
-                gamma[t, :] = alpha[t, :] * beta[t, :]
-                gamma[t, :] = gamma[t, :] / sum(gamma[t, :])
+            gamma = np.array([alpha[t, :] * beta[t, :] for t in range(T)])
+            gamma = np.array(
+                [gamma[t, :] / sum(gamma[t, :]) for t in range(T)]
+            )
             y_prob = gamma
         return y_prob
