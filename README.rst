@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 .. image:: docs/logo.png
-  :width: 250
+  :width: 150
 
 |Language| |License| |Documentation|
 
@@ -95,7 +95,7 @@ Now that the data is fit, we will probably want to try and predict on some data 
 
 Documentation
 -------------
-Check out the latest docs here: https://lsanomaly.readthedocs.io/en/latest/
+Sphinx-based documentation can be built in the ``docs/`` directory.
 
 Examples
 --------
